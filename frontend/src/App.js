@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
@@ -9,7 +8,6 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check token validity on mount
     setLoading(false);
   }, []);
 
@@ -24,24 +22,15 @@ function App() {
   };
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div style={{padding: 50, textAlign: 'center'}}>Loading...</div>;
   }
 
-  return (
-    <Router>
-      <Routes>
-        <Route
-          path="/login"
-          element={token ? <Navigate to="/" /> : <LoginPage onLogin={handleLogin} />}
-        />
-        <Route
-          path="/"
-          element={token ? <Dashboard token={token} onLogout={handleLogout} /> : <Navigate to="/login" />}
-        />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
-  );
+  // Show login if no token
+  if (!token) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
+  return <Dashboard token={token} onLogout={handleLogout} />;
 }
 
 export default App;
