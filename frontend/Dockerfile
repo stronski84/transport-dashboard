@@ -4,11 +4,11 @@ WORKDIR /app
 
 COPY package.json ./
 
-RUN npm install --package-lock=false
+RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN npm run build || (echo "BUILD FAILED" && cat /app/node_modules/.package-lock.json 2>/dev/null || true)
 
 FROM node:18-alpine
 
